@@ -1,0 +1,78 @@
+CREATE TABLE usuario(
+	id serial,
+	nome varchar(30) not null,
+	senha varchar(30) not null,
+	email varchar(40) unique not null,
+	adm boolean,	//se for true é administrador, se false um usuario normal
+	primary key(id)
+);
+
+CREATE TABLE categoria(
+	id serial,
+	nome varchar(20) not null,
+	primary key(id)
+);
+INSERT INTO categoria(nome) VALUES ('Doce');
+INSERT INTO categoria(nome) VALUES ('Mentolado');
+INSERT INTO categoria(nome) VALUES ('Cítrico');
+
+CREATE TABLE marca(
+	id serial,
+	nome varchar(20) not null,
+	img varchar(40) not null,
+	primary key(id)
+);
+INSERT INTO marca(nome, img) VALUES ('Adalya', 'img-marcas/adalya.png');
+INSERT INTO marca(nome, img) VALUES ('Mazaya', 'img-marcas/mazaya.jpg');
+INSERT INTO marca(nome, img) VALUES ('Nay', 'img-marcas/nay.jpg');
+INSERT INTO marca(nome, img) VALUES ('Ziggy', 'img-marcas/ziggy.png');
+INSERT INTO marca(nome, img) VALUES ('Zomo', 'img-marcas/zomo.jpg');
+
+CREATE TABLE essencia(
+	id serial,
+	nome varchar(20) not null,
+	descricao varchar(255) not null,
+	proposta varchar(40) not null,
+	id_marca integer,
+	id_categoria integer,
+	img varchar(40) not null,
+	foreign key (id_marca) references marca(id),
+	foreign key (id_categoria) references categoria(id),	
+	primary key(id)
+);
+INSERT INTO essencia(nome, descricao, proposta, id_marca, id_categoria, img) 
+	VALUES ('Happy Berry', 'Aquela sensação de prazer e nostalgia que só traz boas memórias. Desfrute dessa sensação com o adocicado e impactante Happy Berry.', 'Bala 7 belo', 4, 1, 'img-essencias/');
+INSERT INTO essencia(nome, descricao, proposta, id_marca, id_categoria, img) 
+	VALUES ('Fresh Aphrodisiac', 'Se conecte com essa mistura afrodisíaca que o açaí, a catuaba e a menta proporcionam. Faça da sua sessão única.', 'Açaí e catuaba', 4, 1, 'img-essencias/');
+	
+CREATE TABLE mix(
+	id serial,
+	nome varchar(40) not null,
+	avaliado boolean,
+	id_essencia_1 integer not null,
+	portacem_essencia_1 integer not null,
+	id_essencia_2 integer not null,
+	portacem_essencia_2 integer not null,
+	id_essencia_3 integer,
+	portacem_essencia_3 integer not null,
+	id_categoria integer,
+	id_usuario integer,
+	foreign key(id_essencia_1) references essencia(id),
+	foreign key(id_essencia_2) references essencia(id),
+	foreign key(id_essencia_3) references essencia(id),
+	foreign key(id_categoria) references categoria(id),
+	foreign key(id_usuario) references usuario(id),
+	primary key(id)
+);
+
+CREATE TABLE avaliacao(
+	id serial,
+	nota integer not null,
+	comentario varchar(255),
+	id_usuario integer,
+	id_mix integer,	
+	foreign key(id_usuario) references usuario(id),
+	foreign key(id_mix) references mix(id),
+	primary key(id)
+);
+
